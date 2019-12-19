@@ -2,7 +2,6 @@
 #include <edtimer.h>
 #include <iostream>
 #include <string>
-#include <edcallback.h>
 #include <edutility.h>
 #include <edlogger.h>
 #include <math>
@@ -13,15 +12,11 @@ edtimer::edtimer():
 	m_prev(),
 	m_cur(),
 	m_last_cb(),
-	m_cb(nullptr),
     m_cmode(no_shot)
 {}
 
 edtimer::~edtimer()
-{
-	if (m_cb != NULL)
-		delete m_cb;
-}
+{}
 
 void edtimer::start()
 {
@@ -31,7 +26,7 @@ void edtimer::start()
 	m_last_cb = m_start;
 }
 
-edtimer_callback * edtimer::callback()
+std::function<void(edtimer*)> edtimer::callback()
 {
 	return m_cb;
 }
@@ -41,13 +36,9 @@ edtimer::cb_mode edtimer::callback_mode()
 	return m_cmode;
 }
 
-void edtimer::set_callback(edtimer_callback * cb)
+void edtimer::set_callback(std::function<void(edtimer*)> cb_func)
 {
-	if (m_cb != nullptr)
-		delete m_cb;
-	m_cb = cb;
-	if (m_cb != nullptr)
-		m_cb->timer = this;
+	m_cb = cb_func;
 }
 
 double edtimer::callback_delay()
@@ -83,7 +74,7 @@ void edtimer::update()
 		if (m_cb == nullptr)
 			wlog("No callback set for timer yet callback mode is enabled");
 		else
-			m_cb->exec();
+			m_cb(this);
 	}
 }
 
