@@ -55,14 +55,17 @@ class edtimer
 	double elapsed_since_callback();
 
   private:
+	double to_ms_(const timespec & tspec);
+	timespec from_ms_(double ms);
+	
 	bool m_running;
 
 	timespec m_start;
 	timespec m_prev;
 	timespec m_cur;
 	timespec m_last_cb;
-
-	double m_cb_delay;
+	timespec m_cb_delay;
+	
 	edtimer_callback * m_cb;
 	cb_mode m_cmode;
 };
@@ -72,5 +75,6 @@ bool operator<=(const timespec& lhs, const timespec& rhs);
 bool operator==(const timespec& lhs, const timespec& rhs);
 bool operator>=(const timespec& lhs, const timespec& rhs);
 bool operator>(const timespec& lhs, const timespec& rhs);
-
+timespec operator-(const timespec& lhs, const timespec& rhs);
+timespec operator+(const timespec& lhs, const timespec& rhs);
 #endif
