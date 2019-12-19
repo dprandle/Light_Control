@@ -111,3 +111,37 @@ double edtimer::elapsed_since_callback()
 {
 	return double(m_cur.tv_sec - m_last_cb.tv_sec + (m_cur.tv_nsec - m_last_cb.tv_nsec) / 1000000000.0);
 }
+
+bool operator<(const timespec& lhs, const timespec& rhs)
+{
+    if (lhs.tv_sec == rhs.tv_sec)
+        return lhs.tv_nsec < rhs.tv_nsec;
+    else
+        return lhs.tv_sec < rhs.tv_sec;
+}
+
+bool operator<=(const timespec& lhs, const timespec& rhs)
+{
+    if (lhs.tv_sec <= rhs.tv_sec)
+        return lhs.tv_nsec <= rhs.tv_nsec;
+    else
+        return false;
+}
+
+bool operator==(const timespec& lhs, const timespec& rhs)
+{
+    if (lhs.tv_sec == rhs.tv_sec)
+        return lhs.tv_nsec == rhs.tv_nsec;
+    else
+        return false;
+}
+
+bool operator>=(const timespec& lhs, const timespec& rhs)
+{
+	return !(lhs < rhs);
+}
+
+bool operator>(const timespec& lhs, const timespec& rhs)
+{
+	return !(lhs <= rhs);
+}
