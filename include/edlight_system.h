@@ -2,6 +2,10 @@
 
 #include <edsystem.h>
 
+class edtimer;
+
+const double PROCESS_TIMEOUT = 0.083; // 83 microseconds for 100 points every half cycle (60 Hz)
+
 class edlight_system : public edsystem
 {
   public:
@@ -14,8 +18,12 @@ class edlight_system : public edsystem
     void release();
 
     void update();
-
-	std::string typestr();
-	
-	static std::string TypeString();
+    
+    void process();
+    
+    std::string typestr();
+    
+    static std::string TypeString();
+  private:
+    edtimer * process_timer;
 };
