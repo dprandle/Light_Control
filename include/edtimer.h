@@ -67,5 +67,10 @@ class edtimer
 	cb_mode m_cmode;
 };
 
+bool operator<(const timespec& lhs, const timespec& rhs);
+bool operator<=(const timespec& lhs, const timespec& rhs);
+bool operator==(const timespec& lhs, const timespec& rhs);
+bool operator>=(const timespec& lhs, const timespec& rhs);
+bool operator>(const timespec& lhs, const timespec& rhs);
 
 #endif
