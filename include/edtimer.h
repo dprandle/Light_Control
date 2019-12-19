@@ -1,10 +1,8 @@
-#ifndef EDTIMER_H
-#define EDTIMER_H
+#pragma once
 
 #include <time.h>
 #include <inttypes.h>
-
-struct edtimer_callback;
+#include <functional>
 
 //! class edtimer 
 /*! 
@@ -32,7 +30,7 @@ class edtimer
 
 	void update();
 
-	edtimer_callback * callback();
+	std::function<void(edtimer*)> callback();
 
 	cb_mode callback_mode();
 
@@ -40,7 +38,7 @@ class edtimer
 
 	void stop();
 
-	void set_callback(edtimer_callback * cb);
+	void set_callback(std::function<void(edtimer*)> cb_func);
 
 	void set_callback_mode(cb_mode mode);
 
@@ -66,7 +64,7 @@ class edtimer
 	timespec m_last_cb;
 	timespec m_cb_delay;
 	
-	edtimer_callback * m_cb;
+	std::function<void(edtimer*)> m_cb;
 	cb_mode m_cmode;
 };
 
@@ -77,4 +75,3 @@ bool operator>=(const timespec& lhs, const timespec& rhs);
 bool operator>(const timespec& lhs, const timespec& rhs);
 timespec operator-(const timespec& lhs, const timespec& rhs);
 timespec operator+(const timespec& lhs, const timespec& rhs);
-#endif
