@@ -12,6 +12,8 @@ edtimer::edtimer():
 	m_prev(),
 	m_cur(),
 	m_last_cb(),
+	m_cb_delay(),
+	m_pause(),
     m_cmode(no_shot)
 {}
 
@@ -21,9 +23,12 @@ edtimer::~edtimer()
 void edtimer::start()
 {
 	m_running = true;
-	clock_gettime(CLOCK_MONOTONIC, &m_start);
-	m_prev = m_start;
-	m_last_cb = m_start;
+	clock_gettime(CLOCK_MONOTONIC, &m_cur);
+	m_prev = m_cur;
+	timespec cur_start = m_cur - (m_pause - m_start);
+	m_last_cb = cur_start + (m_last_cb - m_start);
+	m_start = cur_start;
+	m_pause = m_start;
 }
 
 std::function<void(edtimer*)> edtimer::callback()
@@ -82,6 +87,12 @@ void edtimer::stop()
 {
 	update();
 	m_running = false;
+}
+
+void edtimer::pause()
+{
+	stop();
+	clock_gettime(CLOCK_MONOTONIC, &m_pause);
 }
 
 bool edtimer::running()
