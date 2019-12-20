@@ -37,6 +37,8 @@ class edtimer
 	double callback_delay();
 
 	void stop();
+	
+	void pause();
 
 	void set_callback(std::function<void(edtimer*)> cb_func);
 
