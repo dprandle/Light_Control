@@ -1,16 +1,4 @@
-/*!
-  \file   edmctrl.h
-  \author Daniel <dprandle@dprandle-CZ-17>
-  \date   Fri Jul 10 09:20:01 2015
-  
-  \brief  Header file for master controller
-  
-  
-*/
-
-
-#ifndef MCTRL_H
-#define MCTRL_H
+#pragma once
 
 #include <string>
 #include <map>
@@ -70,7 +58,7 @@ class edmctrl
     template<class T>
     T * sys()
     {
-        return static_cast<T>(sys(T::TypeString()));
+        return static_cast<T*>(sys(T::TypeString()));
     }
 
     edsystem * sys(const std::string & sysname);
@@ -81,7 +69,5 @@ class edmctrl
     bool m_running;
     sysmap m_systems;
 	edtimer * m_systimer;
+    edlogger m_logger;
 };
-
-
-#endif

@@ -3,6 +3,8 @@
 
 #include <edsystem.h>
 #include <vector>
+#include <edlight_system.h>
+#include <string>
 
 #define SOCKET_BUFF_SIZE 
 #define COMMAND_BYTE_SIZE 72
@@ -12,28 +14,21 @@ struct pulsed_light_message;
 struct nav_message;
 class edsocket;
 
-struct Command
-{
-    Command();
+const std::string PACKET_ID_PLAY = "Play";
+const std::string PACKET_ID_PAUSE = "Pause";
+const std::string PACKET_ID_STOP = "Stop";
+const std::string PACKET_ID_CONFIGURE = "Configure";
+const uint8_t PACKET_ID_SIZE = 4;
 
+struct Packet_ID
+{
     union
     {
-        struct
-        {
-            uint32_t hash_id;
-            uint32_t cmd_data;
-			double cmd_data_d;
-			double cmd_data_d2;
-			double cmd_data_d3;
-			double cmd_data_d4;
-			double cmd_data_d5;
-			double cmd_data_d6;
-			double cmd_data_d7;
-			double cmd_data_d8;
-        };
-        uint8_t data[COMMAND_BYTE_SIZE];
+        uint32_t hashed_id;
+        uint8_t data[PACKET_ID_SIZE];
     };
 };
+
 
 class edcomm_system : public edsystem
 {
@@ -67,14 +62,16 @@ class edcomm_system : public edsystem
     void _handle_byte(uint8_t byte);
 	void _sendScan(rplidar_scan_message * scanmessage);
     void _do_command();
+	void _do_configure(uint8_t cur_byte);
 	void _clean_closed_connections();
 
 	ClientArray m_clients;
 	
 	int32_t m_server_fd;
 	uint16_t m_port;
-    Command m_cur_cmd;
+    Packet_ID m_cur_packet;
     uint32_t m_cur_index;
+	Automation_Data m_cur_config;
 };
 
 

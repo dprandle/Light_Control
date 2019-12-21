@@ -36,6 +36,7 @@ edmctrl::~edmctrl()
 
 void edmctrl::init()
 {
+    m_logger.initialize();
     sysmap::iterator sysiter = m_systems.begin();
     while (sysiter != m_systems.end())
     {
@@ -66,6 +67,7 @@ void edmctrl::release()
 		sysiter->second->release();
         ++sysiter;
     }
+    m_logger.terminate();
 }
 
 void edmctrl::update()

@@ -26,7 +26,10 @@ edthreaded_fd::edthreaded_fd(uint32_t readbuf_, uint32_t writebuf_):
 	
 	m_wait_timer->set_callback_delay(COMMAND_WAIT_DELAY);
 	m_wait_timer->set_callback_mode(edtimer::single_shot);
-	m_wait_timer->set_callback(new command_wait_callback(this));
+
+	using namespace std::placeholders;
+    std::function<void(edtimer*)> cb_func = std::bind(&edthreaded_fd::wait_callback_func, this, _1);
+	m_wait_timer->set_callback(cb_func);
 }
 	
 edthreaded_fd::~edthreaded_fd()
@@ -251,6 +254,12 @@ void * edthreaded_fd::thread_exec(void * _this)
     edthreaded_fd * thfd = static_cast<edthreaded_fd*>(_this);
     thfd->_exec();
     return nullptr;
+}
+
+void edthreaded_fd::wait_callback_func(edtimer * timer)
+{
+	timer->stop();
+	_setError(edthreaded_fd::CommandNoResponse, 0);
 }
 
 std::string error_string(const edthreaded_fd::Error & err)

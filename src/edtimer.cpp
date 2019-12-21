@@ -4,7 +4,7 @@
 #include <string>
 #include <edutility.h>
 #include <edlogger.h>
-#include <math>
+#include <cmath>
 
 edtimer::edtimer():
     m_running(false),

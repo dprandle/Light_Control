@@ -65,6 +65,7 @@ class edtimer
 	timespec m_cur;
 	timespec m_last_cb;
 	timespec m_cb_delay;
+	timespec m_pause;
 	
 	std::function<void(edtimer*)> m_cb;
 	cb_mode m_cmode;

@@ -84,6 +84,8 @@ class edthreaded_fd
 	virtual int32_t _raw_read(uint8_t * buffer, uint32_t max_size) = 0;
 	virtual int32_t _raw_write(uint8_t * buffer, uint32_t max_size) = 0;
 
+	void wait_callback_func(edtimer * timer);
+
 	virtual void _do_read();
 	virtual void _do_write();
 	
