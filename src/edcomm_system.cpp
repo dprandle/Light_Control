@@ -194,14 +194,14 @@ void edcomm_system::_do_configure(uint8_t cur_byte)
             int sample_index = adjusted_cur_index % m_cur_config.sample_cnt;
             int light_index = adjusted_cur_index / m_cur_config.sample_cnt;
             m_cur_config.lights[light_index].ms_data[sample_index] = cur_byte;
-            tlog("sample index: {}  light index: {} byte_value {}",sample_index,light_index, cur_byte);
             ++m_cur_index;
             ++adjusted_cur_index;
         }
 
         if (adjusted_cur_index >= total_byte_count)
         {
-            dlog("Received entire configuration packet");
+            edlight_system * lsys = edm.sys<edlight_system>();
+            lsys->set_automation_data(m_cur_config);
             m_cur_index = 0;
             m_cur_packet = {};
             m_cur_config = {};

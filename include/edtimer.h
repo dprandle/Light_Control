@@ -52,6 +52,8 @@ class edtimer
 
 	double elapsed();
 
+	bool paused();
+
 	double elapsed_since_callback();
 
   private:

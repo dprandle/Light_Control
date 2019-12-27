@@ -8,6 +8,9 @@ class edgpio;
 
 const double PROCESS_TIMEOUT = 0.083; // 83 microseconds for 100 points every half cycle (60 Hz)
 const int LIGHT_COUNT = 6;
+const double LIGHT_MAX = 90.0;
+const double LIGHT_MIN = 30.0;
+const double SERVER_LIGHT_MAX = 100.0;
 
 struct Light_Info
 {
@@ -54,6 +57,8 @@ class edlight_system : public edsystem
     static std::string TypeString();
 
   private:
+    uint8_t translate_level_(uint8_t lvl);
+
     int tmp;
     int counter;
     edgpio * sync_;

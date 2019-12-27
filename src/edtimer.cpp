@@ -83,6 +83,12 @@ void edtimer::update()
 	}
 }
 
+bool edtimer::paused()
+{
+	return (!running() && !(m_pause == m_start));
+}
+
+
 void edtimer::stop()
 {
 	update();

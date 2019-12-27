@@ -38,7 +38,6 @@ void edlight_system::init()
         ilog("Successfully initialized sync pin on GPIO {}", sync_->pin_num());
     }
 
-    //sync_->set_input_mode(active_low);
     sync_->set_direction(gpio_dir_in);
     st = sync_->get_and_clear_error();
     if (st.gp_code != gpio_no_error)
@@ -129,7 +128,13 @@ void edlight_system::set_automation_data(const Automation_Data & data)
 
 void edlight_system::sync_input()
 {
-    light_pins_[0]->write_pin(1);
+    for (int i = 0; i < LIGHT_COUNT; ++i)
+    {
+        if (!play_timer_->paused() && !play_timer_->running())
+            light_pins_[i]->write_pin(1);
+        else
+            light_pins_[i]->write_pin(0);
+    }
 
     if (light_data_.sample_cnt == 0)
         return;
@@ -144,7 +149,7 @@ void edlight_system::sync_input()
 
     for (int i = 0; i < LIGHT_COUNT; ++i)
     {
-        current_frame_[i] = light_data_.lights[i].ms_data[cur_ms];
+        current_frame_[i] = translate_level_(light_data_.lights[i].ms_data[cur_ms]);
     }
 
     counter = 0;
@@ -159,6 +164,13 @@ void edlight_system::update()
         light_pins_[i]->update();
 }
 
+uint8_t edlight_system::translate_level_(uint8_t lvl)
+{
+    double scale = 1 - double(lvl) / SERVER_LIGHT_MAX;
+    double new_val = scale * (LIGHT_MAX - LIGHT_MIN) + LIGHT_MIN;
+    return uint8_t(new_val);
+}
+
 void edlight_system::process(edtimer * timer)
 {
     ++counter;
@@ -166,7 +178,7 @@ void edlight_system::process(edtimer * timer)
     {
         if (counter == current_frame_[i])
         {
-            light_pins_[0]->write_pin(0);
+            light_pins_[i]->write_pin(1);
         }
     }
 }
