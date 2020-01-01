@@ -291,7 +291,7 @@ int edgpio::write_pin(int val)
     char w_val = char('0' + val);
     int pin = m_pin;
     sprintf(buf, "/sys/class/gpio/gpio%d/value", pin);
-    int fd = open(buf, O_WRONLY);
+    int fd = open(buf, O_WRONLY | O_NONBLOCK);
     if (fd == -1)
     {
         m_err.errno_code = errno;
